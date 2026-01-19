@@ -1,1 +1,26 @@
+name: Dashboard Update
+description: Apply dashboard updates to content.json
+title: "Dashboard Update: "
+labels: ["dashboard-update"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is created by the Creator Dashboard.
+        When you submit it, GitHub Actions will apply the JSON payload to `content.json` and close the issue.
 
+  - type: textarea
+    id: payload
+    attributes:
+      label: Payload
+      description: Do not edit unless you know what you're doing.
+      placeholder: |
+        DASHBOARD_UPDATE
+        ```json
+        {
+          "app": { "name": "DJ Mo Fiya", "bio": "Live DJ sets.", "links": [] },
+          "live": { "isLive": false, "streamUrl": "", "archive": false }
+        }
+        ```
+    validations:
+      required: true
