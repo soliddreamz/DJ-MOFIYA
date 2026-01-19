@@ -1,0 +1,12 @@
+{
+  "app": {
+    "name": "DJ Mo Fiya",
+    "bio": "Live DJ sets.",
+    "links": []
+  },
+  "live": {
+    "isLive": false,
+    "streamUrl": "",
+    "archive": false
+  }
+}
