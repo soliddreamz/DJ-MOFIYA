@@ -1,24 +1,67 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Creator Dashboard</title>
-  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="dashboard.css" />
 </head>
 <body>
-  <h1>Creator Dashboard</h1>
+  <div class="wrap">
+    <header class="card">
+      <h1>Creator Dashboard</h1>
+      <p class="muted">This dashboard updates <code>content.json</code> via a GitHub Issue → GitHub Action.</p>
+      <div class="row">
+        <a class="btn" href="../">Back to App</a>
+      </div>
+    </header>
 
-  <section>
-    <h2>Live Status</h2>
-    <button id="goLive">Go Live</button>
-    <button id="endLive">End Live</button>
-  </section>
+    <section class="card">
+      <h2>App Content</h2>
 
-  <section>
-    <h2>Stream URL</h2>
-    <input id="streamUrl" placeholder="Paste stream embed URL" />
-  </section>
+      <label class="label">Display Name</label>
+      <input id="name" class="input" />
 
-  <button id="save">Save</button>
+      <label class="label">Bio</label>
+      <textarea id="bio" class="textarea" rows="4"></textarea>
+
+      <label class="label">Links (JSON array)</label>
+      <textarea id="links" class="textarea" rows="6"></textarea>
+      <p class="muted">Example: <code>[{"label":"Instagram","url":"https://instagram.com"}]</code></p>
+    </section>
+
+    <section class="card">
+      <h2>Live Control</h2>
+
+      <div class="row">
+        <label class="check">
+          <input type="checkbox" id="isLive" />
+          <span>Live now</span>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="archive" />
+          <span>Archive</span>
+        </label>
+      </div>
+
+      <label class="label">Stream Embed URL</label>
+      <input id="streamUrl" class="input" placeholder="Paste the embed URL (HLS player page, YouTube embed, etc.)" />
+
+      <div class="row">
+        <button id="openIssue" class="btn primary">Save (Creates GitHub Issue)</button>
+      </div>
+
+      <p class="muted">
+        After you submit the issue, GitHub Actions will apply the update and close the issue.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Current Loaded State</h2>
+      <pre id="debug" class="pre"></pre>
+    </section>
+  </div>
 
   <script src="dashboard.js"></script>
 </body>
