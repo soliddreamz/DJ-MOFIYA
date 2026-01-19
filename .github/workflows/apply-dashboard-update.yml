@@ -27,25 +27,26 @@ jobs:
           body = """${{ github.event.issue.body }}"""
 
           # Accept JSON anywhere in the issue body (no fencing required)
-          match = re.search(r"(\{[\s\S]*\})", body)
-          if not match:
+          m = re.search(r"(\{[\s\S]*\})", body)
+          if not m:
             print("ERROR: No JSON object found in issue body")
             sys.exit(1)
 
-          raw = match.group(1).strip()
+          raw = m.group(1).strip()
 
           try:
             payload = json.loads(raw)
           except Exception as e:
             print("ERROR: JSON found but failed to parse:", e)
+            print("-----RAW START-----")
             print(raw)
+            print("-----RAW END-----")
             sys.exit(1)
 
           pathlib.Path("dashboard_payload.json").write_text(
             json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8"
           )
-
           print("OK: Payload extracted")
           PY
 
@@ -69,7 +70,6 @@ jobs:
             json.dumps(content, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8"
           )
-
           print("OK: content.json updated")
           PY
 
