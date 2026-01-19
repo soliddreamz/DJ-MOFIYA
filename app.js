@@ -1,6 +1,6 @@
-// app.js (DJ-MOFIYA) — Pilot 7: Live Presence v1 (Reflection only)
-// Source of truth: content.dashboard.live + content.dashboard.app
-// Fan-side: text-only indicator + optional link (no iframe, no autoplay)
+// app.js — Pilot 7 (Option 1: Minimal live banner)
+// Reads live state from: content.dashboard.live (fallback to content.live)
+// Fan UI: text-only indicator + optional link. No embed. No autoplay. No OFFLINE card.
 
 async function loadContent() {
   const res = await fetch("content.json", { cache: "no-store" });
@@ -44,7 +44,7 @@ async function render() {
   try {
     const content = await loadContent();
 
-    // Source of truth (Pilot 7): dashboard.*
+    // Pilot 7 source of truth: dashboard.*
     const dashboard = content?.dashboard || {};
     const app = dashboard?.app || content?.app || {};
     const live = dashboard?.live || content?.live || {};
@@ -52,7 +52,7 @@ async function render() {
     const isLive = live?.isLive === true;
     const streamUrl = typeof live?.streamUrl === "string" ? live.streamUrl.trim() : "";
 
-    // Base app header (always)
+    // Base header (always)
     let html = `
       <div class="card">
         <h1>${esc(app?.name || "Creator")}</h1>
@@ -60,7 +60,8 @@ async function render() {
       </div>
     `;
 
-    // Live Presence v1 (fan-safe, text-only)
+    // Minimal Live Banner (Option 1)
+    // Only show when live is true AND a valid stream URL exists.
     if (isLive && streamUrl) {
       html += `
         <div class="card">
