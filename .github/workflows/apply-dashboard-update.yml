@@ -1,1 +1,53 @@
+name: Apply Dashboard Update
 
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  apply:
+    if: contains(github.event.issue.labels.*.name, 'dashboard-update')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Apply update to content.json
+        run: node scripts/apply_update.js
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+
+      - name: Commit changes
+        run: |
+          git config user.name "base-dashboard-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add content.json
+          git commit -m "Apply dashboard update" || echo "No changes to commit"
+          git push
+
+      - name: Close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: "✅ Update applied to `content.json` and deployed via GitHub Pages."
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              state: "closed"
+            });
