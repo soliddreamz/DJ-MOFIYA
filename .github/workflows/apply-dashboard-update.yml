@@ -9,137 +9,80 @@ permissions:
   contents: write
   issues: write
 
-concurrency:
-  group: apply-dashboard-update
-  cancel-in-progress: false
-
 jobs:
   apply:
-    if: ${{ github.event.issue.state == 'open' }}
+    if: github.event.issue.state == 'open'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Extract JSON payload from Issue body
+      - name: Extract JSON payload from issue body
         id: extract
-        shell: bash
         run: |
-          set -euo pipefail
-
-          BODY_FILE="$RUNNER_TEMP/issue_body.txt"
-          printf "%s" "${{ github.event.issue.body }}" > "$BODY_FILE"
-
-          python3 - <<'PY'
+          python3 <<'PY'
           import json, re, sys, pathlib
 
-          body = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
+          body = """${{ github.event.issue.body }}"""
 
-          # Prefer fenced ```json blocks if present
-          m = re.search(r"```json\s*(\{.*?\})\s*```", body, flags=re.S)
-          if not m:
-            # Fallback: first {...} block in the text
-            m = re.search(r"(\{.*\})", body, flags=re.S)
-
-          if not m:
-            print("ERROR: No JSON object found in issue body.", file=sys.stderr)
+          match = re.search(r"```json\s*(\{.*?\})\s*```", body, re.S)
+          if not match:
+            print("ERROR: No JSON payload found in issue body")
             sys.exit(1)
 
-          raw = m.group(1).strip()
+          payload = json.loads(match.group(1))
+          pathlib.Path("dashboard_payload.json").write_text(
+              json.dumps(payload, indent=2)
+          )
+          PY
 
-          # Validate JSON
-          try:
-            data = json.loads(raw)
-          except Exception as e:
-            print("ERROR: JSON found but failed to parse:", e, file=sys.stderr)
-            print("-----RAW START-----", file=sys.stderr)
-            print(raw, file=sys.stderr)
-            print("-----RAW END-----", file=sys.stderr)
-            sys.exit(1)
-
-          out = pathlib.Path("dashboard_update_payload.json")
-          out.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-          print("OK: Payload extracted to dashboard_update_payload.json")
-          PY "$BODY_FILE"
-
-      - name: Apply payload into content.json (merge, non-destructive)
-        shell: bash
+      - name: Update content.json
         run: |
-          set -euo pipefail
-
-          python3 - <<'PY'
+          python3 <<'PY'
           import json, pathlib
 
-          payload = json.loads(pathlib.Path("dashboard_update_payload.json").read_text(encoding="utf-8"))
-
+          payload = json.loads(pathlib.Path("dashboard_payload.json").read_text())
           content_path = pathlib.Path("content.json")
+
           if content_path.exists():
-            try:
-              content = json.loads(content_path.read_text(encoding="utf-8"))
-            except Exception:
-              content = {}
+            content = json.loads(content_path.read_text())
           else:
             content = {}
 
-          # Merge strategy:
-          # - preserve existing keys unless payload provides replacements for known sections
-          # - store full dashboard payload under `dashboard` for deterministic retrieval
-          content.setdefault("dashboard", {})
           content["dashboard"] = payload
 
-          # Also map common fields if they exist in payload
-          app = payload.get("app", {})
-          live = payload.get("live", {})
-
-          # Only set these top-level keys if present in payload (keeps old schema-compatible files intact)
-          if app:
-            content.setdefault("app", {})
-            if "name" in app: content["app"]["name"] = app["name"]
-            if "bio" in app: content["app"]["bio"] = app["bio"]
-            if "links" in app: content["app"]["links"] = app["links"]
-
-          if live:
-            content.setdefault("live", {})
-            if "isLive" in live: content["live"]["isLive"] = live["isLive"]
-            if "streamUrl" in live: content["live"]["streamUrl"] = live["streamUrl"]
-            if "archive" in live: content["live"]["archive"] = live["archive"]
-
-          content_path.write_text(json.dumps(content, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-          print("OK: content.json updated (merged).")
+          content_path.write_text(json.dumps(content, indent=2))
           PY
 
-      - name: Commit and push
-        shell: bash
+      - name: Commit changes
         run: |
-          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Only commit if there are changes
           if git diff --quiet; then
-            echo "No file changes detected. Skipping commit."
+            echo "No changes to commit"
             exit 0
           fi
 
-          git add content.json dashboard_update_payload.json
-          git commit -m "Apply dashboard update from Issue #${{ github.event.issue.number }}"
+          git add content.json dashboard_payload.json
+          git commit -m "Apply dashboard update from issue #${{ github.event.issue.number }}"
           git push
 
-      - name: Comment + close Issue
+      - name: Close issue
         uses: actions/github-script@v7
         with:
           script: |
-            const issue_number = context.payload.issue.number;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-
             await github.rest.issues.createComment({
-              owner, repo, issue_number,
-              body: "✅ Dashboard update applied to `content.json` from the Issue payload."
-            });
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: "✅ Dashboard update applied successfully."
+            })
 
             await github.rest.issues.update({
-              owner, repo, issue_number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
               state: "closed"
-            });
+            })
