@@ -3,15 +3,12 @@
     "name": "DJ Mo Fiya",
     "bio": "Live DJ sets. Culture first.",
     "links": [
-      {
-        "label": "Home",
-        "url": "/"
-      }
+      { "label": "Home", "url": "/" }
     ]
   },
   "live": {
     "isLive": true,
-    "streamUrl": "https://www.youtube.com/embed/iYdOyTzVQSk?autoplay=1&mute=1",
+    "streamUrl": "live.html",
     "archive": false
   }
 }
