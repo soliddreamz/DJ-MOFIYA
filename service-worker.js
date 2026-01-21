@@ -1,44 +1,40 @@
-const CACHE_NAME = "base-app-cache-v4";
-const ASSETS = [
+const CACHE_NAME = "base-pilot-7-v1";
+
+const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
-  "./app.js",
-  "./content.json",
   "./manifest.json",
-  "./service-worker.js",
-  "./dashboard/",
-  "./dashboard/index.html",
-  "./dashboard/dashboard.js",
-  "./dashboard/dashboard.css"
+  "./assets/icon-192.png",
+  "./assets/icon-512.png",
+  "./assets/apple-touch-icon.png"
 ];
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
   );
+  self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+  self.clients.claim();
 });
 
-self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
-
-  // Always try network for content.json so the live toggle updates fast
-  if (url.pathname.endsWith("/content.json")) {
-    event.respondWith(
-      fetch(event.request).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE_NAME).then((c) => c.put(event.request, copy));
-        return res;
-      }).catch(() => caches.match(event.request))
-    );
-    return;
-  }
-
-  // Cache-first for everything else
+self.addEventListener("fetch", event => {
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
   );
 });
