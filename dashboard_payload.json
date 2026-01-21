@@ -1,14 +1,24 @@
 {
-  "app": {
+  "creator": {
     "name": "DJ Mo Fiya",
-    "bio": "Live DJ sets. Culture first.",
-    "links": [
-      { "label": "Home", "url": "/" }
-    ]
+    "bio": "Live DJ sets. Culture first."
   },
+  "links": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/djmofiya/"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/DJMoFiya"
+    }
+  ],
   "live": {
-    "isLive": true,
-    "streamUrl": "live.html",
-    "archive": false
+    "streamUrl": "live.html"
+  },
+  "meta": {
+    "pilot": true,
+    "system": "base",
+    "version": "v1"
   }
 }
