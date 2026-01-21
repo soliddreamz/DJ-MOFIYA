@@ -1,12 +1,14 @@
-const CACHE_NAME = "base-pilot-7-v1";
+const CACHE_NAME = "base-pilot-7-v2";
 
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
+  "./live.html",
   "./manifest.json",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
-  "./assets/apple-touch-icon.png"
+  "./assets/apple-touch-icon.png",
+  "./assets/logo.png"
 ];
 
 self.addEventListener("install", event => {
