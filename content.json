@@ -1,34 +1,47 @@
 {
   "app": {
-    "name": "DJ Mo Fiya",
-    "bio": "Live DJ sets. Culture first.",
-    "links": [
+    "name": "DJ Mo Fiya"
+  },
+  "branding": {
+    "pilot_badge": true
+  },
+  "home": {
+    "title": "DJ Mo Fiya",
+    "subtitle": "Live DJ sets. Culture first.",
+    "description": "Official DJ Mo Fiya app — live sets, updates, and links.",
+    "hero_image": "assets/logo-wide.png"
+  },
+  "tabs": [
+    { "id": "home", "label": "Home" },
+    { "id": "links", "label": "Links" },
+    { "id": "live", "label": "Live" }
+  ],
+  "links": {
+    "sections": [
       {
-        "label": "Home",
-        "url": "/"
+        "title": "DJ Mo Fiya",
+        "items": [
+          {
+            "label": "Instagram",
+            "url": "https://www.instagram.com/djmofiya/"
+          },
+          {
+            "label": "Facebook",
+            "url": "https://www.facebook.com/DJMoFiya"
+          }
+        ]
       }
     ]
   },
   "live": {
-    "isLive": true,
-    "streamUrl": "live.html",
-    "archive": false
+    "enabled": true,
+    "status": "live",
+    "description": "DJ Mo Fiya is live now.",
+    "watch_url": "./live.html"
   },
-  "dashboard": {
-    "app": {
-      "name": "DJ Mo Fiya",
-      "bio": "Live DJ sets. Culture first.",
-      "links": [
-        {
-          "label": "Home",
-          "url": "/"
-        }
-      ]
-    },
-    "live": {
-      "isLive": true,
-      "streamUrl": "live.html",
-      "archive": false
-    }
+  "feedback": {
+    "enabled": false,
+    "mailto": "",
+    "subject": "DJ Mo Fiya App Feedback"
   }
 }
