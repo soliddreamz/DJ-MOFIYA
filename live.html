@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <title>DJ Mo Fiya — Live</title>
+  <style>
+    body { font-family: -apple-system, system-ui, Arial; margin: 0; padding: 16px; }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    .card { border: 1px solid #ddd; border-radius: 14px; padding: 14px; margin: 12px 0; }
+    a { color: inherit; }
+    iframe { border: 0; border-radius: 14px; width: 100%; height: 520px; }
+    .pill { display:inline-block; padding: 6px 10px; border-radius: 999px; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <a class="pill" href="./">← Back</a>
+      <span class="pill">Live</span>
+    </div>
+
+    <div class="card">
+      <div id="player"></div>
+      <p style="margin:10px 0 0; opacity:.8; font-size:14px;">
+        If video doesn’t play in iOS PWA, tap the player once (user interaction requirement).
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // PASTE the Cloudflare iframe src URL below (from Cloudflare Stream → Live Inputs → your input → Embed tab)
+    // Example format: https://customer-xxxx.cloudflarestream.com/<LIVE_ID>/iframe
+    const CLOUDFLARE_IFRAME_SRC = "__PASTE_CLOUDFLARE_IFRAME_SRC__";
+
+    const el = document.getElementById("player");
+
+    if (!CLOUDFLARE_IFRAME_SRC || CLOUDFLARE_IFRAME_SRC.includes("__PASTE_")) {
+      el.innerHTML = `
+        <div style="padding:12px;border:1px dashed #ddd;border-radius:14px;">
+          Missing iframe src. Open <b>Cloudflare → Stream → Live Inputs → pilot7-dj-mofiya-live → Embed</b>,
+          copy the <b>iframe src</b>, and paste into <code>live.html</code>.
+        </div>
+      `;
+    } else {
+      el.innerHTML = `
+        <iframe
+          src="${CLOUDFLARE_IFRAME_SRC}"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+          allowfullscreen="true"
+        ></iframe>
+      `;
+    }
+  </script>
+</body>
+</html>
