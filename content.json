@@ -28,6 +28,10 @@
           {
             "label": "Facebook",
             "url": "https://www.facebook.com/DJMoFiya"
+          },
+          {
+            "label": "Creator Dashboard",
+            "url": "dashboard/"
           }
         ]
       }
@@ -37,7 +41,7 @@
     "enabled": true,
     "status": "live",
     "description": "DJ Mo Fiya is live now.",
-    "watch_url": "./live.html"
+    "watch_url": "live.html"
   },
   "feedback": {
     "enabled": false,
