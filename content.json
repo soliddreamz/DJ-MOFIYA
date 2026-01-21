@@ -10,8 +10,8 @@
     ]
   },
   "live": {
-    "isLive": false,
-    "streamUrl": "",
+    "isLive": true,
+    "streamUrl": "live.html",
     "archive": false
   },
   "dashboard": {
@@ -27,7 +27,7 @@
     },
     "live": {
       "isLive": true,
-      "streamUrl": "https://www.youtube.com/embed/iYdOyTzVQSk?autoplay=1&mute=1",
+      "streamUrl": "live.html",
       "archive": false
     }
   }
