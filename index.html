@@ -1,32 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="manifest.json" />
   <title>DJ Mo Fiya</title>
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" href="assets/icon-192.png" />
-  <meta name="theme-color" content="#000000" />
+  <style>
+    body { font-family: -apple-system, system-ui, Arial; margin: 0; padding: 16px; }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    .card { border: 1px solid #ddd; border-radius: 14px; padding: 14px; margin: 12px 0; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    a { color: inherit; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; border: 1px solid #ddd; text-decoration: none; }
+  </style>
 </head>
 
-<body style="margin:0; background:#000;">
-  <!-- Base UI mounts here (DO NOT STYLE APP HERE) -->
-  <div id="app"></div>
+<body>
+  <div class="wrap">
+    <div id="app"></div>
 
-  <!-- Base Core -->
-  <script src="./app.js"></script>
+    <div class="card">
+      <div class="row">
+        <span class="pill">Base App</span>
+        <a class="pill" href="dashboard/">Creator Dashboard</a>
+        <a class="pill" href="live.html">Watch Live</a>
+      </div>
+    </div>
+  </div>
 
-  <!-- Service Worker -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js");
-      });
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
