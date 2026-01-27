@@ -36,7 +36,10 @@
   "live": {
     "enabled": true,
     "status": "live",
-    "description": "DJ Mo Fiya is live now.",
+    "label_live": "Live now",
+    "label_offline": "Offline",
+    "no_replay": "No replay available",
+    "notice": "Live DJ performance. Music is played as part of a real-time set, not an on-demand service.",
     "watch_url": "https://soliddreamz.github.io/DJ-MOFIYA/live.html"
   },
   "feedback": {
