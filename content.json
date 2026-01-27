@@ -36,10 +36,7 @@
   "live": {
     "enabled": true,
     "status": "live",
-    "label_live": "Live now",
-    "label_offline": "Offline",
-    "no_replay": "No replay available",
-    "notice": "Live DJ performance. Music is played as part of a real-time set, not an on-demand service.",
+    "description": "Live now",
     "watch_url": "https://soliddreamz.github.io/DJ-MOFIYA/live.html"
   },
   "feedback": {
