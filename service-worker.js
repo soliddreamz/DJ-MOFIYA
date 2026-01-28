@@ -1,4 +1,4 @@
-const CACHE_NAME = "base-pilot-7-v3.5";
+const CACHE_NAME = "base-pilot-7-v3.6";
 
 const ASSETS_TO_CACHE = [
   "./",
