@@ -40,7 +40,6 @@ html, body{
 .line{
   font-weight:800;
   letter-spacing:0.4px;
-  text-transform:none;
   text-shadow:
     0 2px 0 var(--shadow),
     0 8px 28px var(--shadow);
@@ -78,9 +77,7 @@ html, body{
   color: var(--accent);
 }
 
-.tag.subtle{
-  opacity:0.75;
-}
+.tag.subtle{ opacity:0.75; }
 
 #controls{
   position:absolute;
@@ -95,9 +92,7 @@ html, body{
   box-sizing:border-box;
 }
 
-#controls.hidden{
-  display:none;
-}
+#controls.hidden{ display:none; }
 
 .row{
   display:flex;
@@ -113,16 +108,7 @@ label{
   min-width:120px;
 }
 
-input[type="text"]{
-  flex:1;
-  min-width:220px;
-  padding:8px 10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background: rgba(0,0,0,0.35);
-  color: var(--text);
-  outline:none;
-}
+input[type="range"]{ flex:1; }
 
 button{
   padding:8px 10px;
@@ -134,13 +120,7 @@ button{
   cursor:pointer;
 }
 
-button:active{
-  transform: translateY(1px);
-}
-
-input[type="range"]{
-  flex:1;
-}
+button:active{ transform: translateY(1px); }
 
 output{
   min-width:70px;
