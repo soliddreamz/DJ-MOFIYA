@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Base Lyrics Overlay v1</title>
+  <title>Base Lyrics Overlay v1 (Auto Demo)</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- Overlay Canvas -->
   <main id="stage" aria-label="Lyrics overlay">
     <div id="lyrics">
       <div id="linePrev" class="line muted"></div>
@@ -16,28 +15,14 @@
       <div id="lineNext" class="line muted"></div>
     </div>
 
-    <!-- Small “Powered” mark (optional) -->
     <div id="brand">
       <span class="tag">TEXT &amp; DECKS</span>
       <span class="tag subtle">POWERED BY BASE</span>
     </div>
   </main>
 
-  <!-- Controls (toggle on/off for testing; hide in OBS) -->
-  <section id="controls" aria-label="Controls">
-    <div class="row">
-      <label for="audioUrl">Audio URL (optional):</label>
-      <input id="audioUrl" type="text" placeholder="Paste stream URL (HLS/MP3) or leave blank if syncing manually" />
-      <button id="loadAudio">Load</button>
-    </div>
-
-    <div class="row">
-      <button id="start">Start</button>
-      <button id="pause">Pause</button>
-      <button id="reset">Reset</button>
-      <button id="toggleControls">Hide Controls</button>
-    </div>
-
+  <!-- Controls exist but are hidden by default -->
+  <section id="controls" class="hidden" aria-label="Controls">
     <div class="row">
       <label for="offsetMs">Sync Offset (ms):</label>
       <input id="offsetMs" type="range" min="-5000" max="5000" value="0" step="50" />
@@ -47,20 +32,14 @@
     </div>
 
     <div class="row">
-      <label for="lyricsFile">Lyrics Source:</label>
-      <select id="lyricsFile">
-        <option value="lyrics.json" selected>lyrics.json</option>
-      </select>
-      <button id="reloadLyrics">Reload Lyrics</button>
+      <button id="toggleControls">Show Controls</button>
+      <button id="reset">Reset</button>
     </div>
 
     <div class="hint">
-      Tip: In OBS, use <b>Browser Source</b> pointing to this page, or <b>Window Capture</b> if you open it in a dedicated browser window.
+      OBS: Add this page as a <b>Browser Source</b>.
     </div>
   </section>
-
-  <!-- Audio element (optional) -->
-  <audio id="audio" crossorigin="anonymous"></audio>
 
   <script src="player.js"></script>
 </body>
