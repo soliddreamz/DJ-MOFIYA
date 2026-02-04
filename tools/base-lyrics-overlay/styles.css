@@ -1,0 +1,155 @@
+:root{
+  --bg: rgba(0,0,0,0);
+  --text: #fff;
+  --muted: rgba(255,255,255,0.55);
+  --shadow: rgba(0,0,0,0.85);
+  --panel: rgba(10,10,10,0.85);
+  --border: rgba(255,255,255,0.18);
+  --accent: rgba(255,255,255,0.9);
+  --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background: var(--bg);
+  font-family: var(--font);
+  overflow:hidden;
+}
+
+#stage{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:6vh 6vw;
+  box-sizing:border-box;
+}
+
+#lyrics{
+  width:min(1200px, 94vw);
+  text-align:center;
+  line-height:1.08;
+  user-select:none;
+}
+
+.line{
+  font-weight:800;
+  letter-spacing:0.4px;
+  text-transform:none;
+  text-shadow:
+    0 2px 0 var(--shadow),
+    0 8px 28px var(--shadow);
+  word-break:break-word;
+}
+
+.line.now{
+  font-size: clamp(46px, 6vw, 110px);
+  color: var(--text);
+}
+
+.line.muted{
+  font-size: clamp(24px, 3.2vw, 54px);
+  color: var(--muted);
+  margin: 10px 0;
+}
+
+#brand{
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  opacity:0.9;
+}
+
+.tag{
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:0.6px;
+  padding:6px 10px;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,0.35);
+  color: var(--accent);
+}
+
+.tag.subtle{
+  opacity:0.75;
+}
+
+#controls{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:min(520px, 92vw);
+  padding:14px 14px 12px;
+  border:1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius:12px;
+  box-sizing:border-box;
+}
+
+#controls.hidden{
+  display:none;
+}
+
+.row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+
+label{
+  font-size:12px;
+  opacity:0.9;
+  min-width:120px;
+}
+
+input[type="text"]{
+  flex:1;
+  min-width:220px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,0.35);
+  color: var(--text);
+  outline:none;
+}
+
+button{
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,0.35);
+  color: var(--text);
+  font-weight:700;
+  cursor:pointer;
+}
+
+button:active{
+  transform: translateY(1px);
+}
+
+input[type="range"]{
+  flex:1;
+}
+
+output{
+  min-width:70px;
+  text-align:right;
+  font-weight:800;
+}
+
+.hint{
+  font-size:12px;
+  opacity:0.8;
+  margin-top:4px;
+}
