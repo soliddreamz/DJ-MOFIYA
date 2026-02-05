@@ -1,114 +1,122 @@
-// Base Lyrics Overlay v1 (Auto Demo)
+// Base Lyrics Overlay v1 — CUE MODE (Enhanced)
 // - No lyrics.json
-// - No manual typing
-// - Runs automatically forever
-// - Built to prove: "OBS can capture a never-freeze text layer"
+// - No DJ software dependency
+// - You advance text live (SPACE or click/tap)
+// - Built for OBS capture: stable, simple, never-freeze
 
 const els = {
   linePrev: document.getElementById("linePrev"),
   lineNow: document.getElementById("lineNow"),
   lineNext: document.getElementById("lineNext"),
-
-  controls: document.getElementById("controls"),
-  toggleControls: document.getElementById("toggleControls"),
-  reset: document.getElementById("reset"),
-
-  offsetMs: document.getElementById("offsetMs"),
-  offsetOut: document.getElementById("offsetOut"),
-  nudgeMinus: document.getElementById("nudgeMinus"),
-  nudgePlus: document.getElementById("nudgePlus"),
+  stage: document.getElementById("stage"),
 };
 
-function setOffsetLabel() {
-  const v = parseInt(els.offsetMs.value, 10);
-  els.offsetOut.textContent = `${v} ms`;
-}
-
-let running = true;
-let rafId = null;
-
-let t0 = performance.now();
-let seconds = 0;
-
-// Auto demo “lyrics”
-const demoLines = [
-  "TEXT & DECKS — LIVE TEST",
-  "BASE LYRICS OVERLAY (AUTO DEMO)",
-  "IF THIS NEVER FREEZES, THE PATH IS CLEAN",
-  "OBS CAPTURE SHOULD STAY MOVING",
-  "NO DJ SOFTWARE LYRICS INVOLVED",
-  "NO HDMI OUTPUT INVOLVED",
-  "THIS IS PURE BASE-SIDE RENDER",
-  "CONTROL LATER — STABILITY FIRST",
-  "KEEP WATCHING… IT SHOULD NEVER STOP",
+const cues = [
+  "YO — LISTEN TO THIS",
+  "THIS PART RIGHT HERE",
+  "DON’T MISS THIS BAR",
+  "RUN THAT BACK",
+  "WAIT FOR IT…",
+  "HOLD UP",
+  "TEXT & DECKS",
+  "POWERED BY BASE",
 ];
 
-function nowSeconds() {
-  const offset = parseInt(els.offsetMs.value, 10) / 1000;
-  return seconds + offset;
+// Behavior flags (safe defaults)
+const LOOP = true;           // keep cycling through cues
+const SHOW_HINT = true;      // show quick hint on load
+const ADVANCE_KEY = "Space"; // key to advance
+
+let index = 0;
+let hintTimeout = null;
+
+function getCue(i) {
+  if (!cues.length) return "";
+  if (LOOP) {
+    const n = cues.length;
+    return cues[((i % n) + n) % n];
+  }
+  // non-loop: clamp
+  if (i < 0) return "";
+  if (i >= cues.length) return "";
+  return cues[i];
 }
 
 function render() {
-  // advance “lyric index” every 2.5 seconds, forever
-  const t = nowSeconds();
-  const idx = Math.floor(t / 2.5);
-
-  const prev = demoLines[(idx - 1 + demoLines.length) % demoLines.length];
-  const now  = demoLines[idx % demoLines.length];
-  const next = demoLines[(idx + 1) % demoLines.length];
-
-  els.linePrev.textContent = prev;
-  els.lineNow.textContent  = now;
-  els.lineNext.textContent = next;
+  els.linePrev.textContent = getCue(index - 1);
+  els.lineNow.textContent  = getCue(index);
+  els.lineNext.textContent = getCue(index + 1);
 }
 
-function tick() {
-  if (!running) return;
+function advance() {
+  if (!cues.length) return;
 
-  const tNow = performance.now();
-  seconds = (tNow - t0) / 1000;
-
+  if (LOOP) {
+    index = (index + 1) % cues.length;
+  } else {
+    index = Math.min(index + 1, cues.length - 1);
+  }
   render();
-  rafId = requestAnimationFrame(tick);
 }
 
-function resetRun() {
-  if (rafId) cancelAnimationFrame(rafId);
-  t0 = performance.now();
-  seconds = 0;
-  running = true;
-  tick();
+function back() {
+  if (!cues.length) return;
+
+  if (LOOP) {
+    index = (index - 1 + cues.length) % cues.length;
+  } else {
+    index = Math.max(index - 1, 0);
+  }
+  render();
 }
 
-// Controls (hidden by default)
-if (els.toggleControls) {
-  els.toggleControls.addEventListener("click", () => {
-    els.controls.classList.toggle("hidden");
-  });
-}
-if (els.reset) els.reset.addEventListener("click", resetRun);
+function showHintOnce() {
+  if (!SHOW_HINT) return;
 
-if (els.offsetMs) {
-  els.offsetMs.addEventListener("input", () => {
-    setOffsetLabel();
-    render();
-  });
-}
-if (els.nudgeMinus) {
-  els.nudgeMinus.addEventListener("click", () => {
-    els.offsetMs.value = String(parseInt(els.offsetMs.value, 10) - 100);
-    setOffsetLabel();
-    render();
-  });
-}
-if (els.nudgePlus) {
-  els.nudgePlus.addEventListener("click", () => {
-    els.offsetMs.value = String(parseInt(els.offsetMs.value, 10) + 100);
-    setOffsetLabel();
-    render();
-  });
+  const hint = document.createElement("div");
+  hint.style.position = "absolute";
+  hint.style.top = "20px";
+  hint.style.left = "20px";
+  hint.style.padding = "8px 10px";
+  hint.style.borderRadius = "10px";
+  hint.style.border = "1px solid rgba(255,255,255,0.18)";
+  hint.style.background = "rgba(10,10,10,0.7)";
+  hint.style.color = "#fff";
+  hint.style.fontFamily = "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif";
+  hint.style.fontSize = "12px";
+  hint.style.fontWeight = "800";
+  hint.style.letterSpacing = "0.3px";
+  hint.style.textShadow = "0 2px 10px rgba(0,0,0,0.8)";
+  hint.style.userSelect = "none";
+  hint.textContent = "SPACE = next • SHIFT+SPACE = back • click/tap = next";
+
+  els.stage.appendChild(hint);
+
+  hintTimeout = window.setTimeout(() => {
+    hint.remove();
+  }, 3500);
 }
 
-setOffsetLabel();
+// Key controls
+window.addEventListener("keydown", (e) => {
+  // prevent page scroll on space
+  if (e.code === ADVANCE_KEY) e.preventDefault();
+
+  if (e.code === ADVANCE_KEY && e.shiftKey) {
+    back();
+    return;
+  }
+
+  if (e.code === ADVANCE_KEY) {
+    advance();
+  }
+}, { passive: false });
+
+// Click/tap to advance
+els.stage.addEventListener("pointerdown", () => {
+  advance();
+});
+
+// Init
 render();
-tick();
+showHintOnce();
